@@ -1,6 +1,7 @@
 'use strict'
 
 const crumb = require('crumb')
+const hapiDevErrors = require('hapi-dev-errors')
 const Hapi = require('@hapi/hapi')
 const handlerbars = require('./lib/helpers')
 const inert = require('@hapi/inert')
@@ -52,6 +53,13 @@ async function init () {
   //       generateNonces: false
   //     }
   // }])
+
+  await server.register({
+    plugin: hapiDevErrors,
+    options: {
+      showErrors: process.env.NODE_ENV !== 'prod'
+    }
+  })
 
     await server.register({
       plugin: crumb,
