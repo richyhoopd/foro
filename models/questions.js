@@ -7,8 +7,17 @@ class Questions {
     this.collection = this.ref.child('questions')
   }
 
-  async create (data, user) {
-    data.owner = user
+  async create (info, user, filename) {
+    const data = {
+      description: info.description,
+      title: info.title,
+      owner: user
+    }
+
+    if (filename) {
+      data.filename = filename
+    }
+
     const question = this.collection.push()
     question.set(data)
 
@@ -29,7 +38,7 @@ class Questions {
 
   async answer (data, user) {
     const answers = await this.collection.child(data.id).child('answers').push()
-    answers.set({text: data.answer, user: user})
+    answers.set({ text: data.answer, user: user })
     return answers
   }
 
@@ -46,7 +55,7 @@ class Questions {
       answers[key].correct = (key === answerId)
     }
 
-    const update = await this.collection.child(questionId).child('answer').update(answers)
+    const update = await this.collection.child(questionId).child('answers').update(answers)
     return update
   }
 }

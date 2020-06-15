@@ -3,12 +3,7 @@
 const questions = require('../models/index').questions
 
 async function home (req, h) {
-  let data
-  try {
-    data = await questions.getLast(10)
-  } catch (error) {
-    console.error(error)
-  }
+  const data = await req.server.methods.getLast(10)
 
   return h.view('index', {
     title: 'home',
@@ -47,7 +42,7 @@ async function viewQuestion (req, h) {
       return notFound(req, h)
     }
   } catch (error) {
-    console.error(error)
+    req.log('error', error)
   }
 
   return h.view('question', {
@@ -64,7 +59,7 @@ function notFound (req, h) {
 
 function fileNotFound (req, h) {
   const response = req.response
-  if (response.isBoom && response.output.statusCode === 404) {
+  if (req.path.startsWith('/api') && response.isBoom && response.output.statusCode === 404) {
     return h.view('404', {}, { layout: 'error-layout' }).code(404)
   }
 
