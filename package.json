@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Un sitio como StackOverflow",
   "main": "index.js",
+  "engines": {
+    "node": "14.3.0"
+  },
   "scripts": {
     "dev": "nodemon --ext js,hbs",
     "lint": "standard",
