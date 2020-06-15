@@ -1,5 +1,6 @@
 'use strict'
 
+const crumb = require('crumb')
 const Hapi = require('@hapi/hapi')
 const handlerbars = require('./lib/helpers')
 const inert = require('@hapi/inert')
@@ -9,6 +10,8 @@ const path = require('path')
 const routes = require('./routes')
 const site = require('./controllers/site')
 const vision = require('@hapi/vision')
+const balnkie = require('blankie')
+const scooter = require('@hapi/scooter')
 
 const server = Hapi.server({
   port: process.env.PORT || 3000,
@@ -34,6 +37,27 @@ async function init () {
             },
             'stdout'
           ]
+        }
+      }
+    })
+
+    // se supone que esto mejora mi css pero no se :D
+  //   await server.register([scooter,{
+  //     plugin: balnkie,
+  //     options: {
+  //       defaultSrc: `'self' 'unsafe-inline'`,
+  //       styleSrc: `'self 'unsafe-inline' https://maxcdn.bootstrapcdn.com`,
+  //       fontSrc: `'self' 'unsafe-inline' data:`,
+  //       scriptSrc: `'self 'unsafe-inline' https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com https://code.jquery.com/`,
+  //       generateNonces: false
+  //     }
+  // }])
+
+    await server.register({
+      plugin: crumb,
+      options: {
+        cookieOptions: {
+          isSecure: process.env.NODE_ENV === 'prod'
         }
       }
     })
