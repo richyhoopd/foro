@@ -1,24 +1,23 @@
 'use strict'
 
 const users = require('../models/index').users
-const boom = require('boom')
-const Boom = require('boom')
 
 async function createUser (req, h) {
   let result
   try {
     result = await users.create(req.payload)
+    console.log(`Usuario registrado ${result}`)
   } catch (error) {
     console.error(error)
     return h.view('register', {
-      title: 'registro',
-      error: 'error creando el usuario'
+      title: 'Registro',
+      error: 'Error creando el usuario'
     })
   }
 
   return h.view('register', {
-    title: 'registro',
-    success: 'usuario creado exitosamente'
+    title: 'Registro',
+    success: 'Usuario creado exitosamente'
   })
 }
 
@@ -33,14 +32,14 @@ async function validateUser (req, h) {
     if (!result) {
       return h.view('login', {
         title: 'Login',
-        error: 'Email y/o clave incorrectas'
+        error: 'Email y/o contraseña incorrecta'
       })
     }
   } catch (error) {
     console.error(error)
     return h.view('login', {
       title: 'Login',
-      error: 'Problemas validando al usuario'
+      error: 'Problemas validando el usuario'
     })
   }
 
@@ -53,19 +52,19 @@ async function validateUser (req, h) {
 function failValidation (req, h, err) {
   const templates = {
     '/create-user': 'register',
-    '/validate-user': 'login'
+    '/validate-user': 'login',
+    '/create-question': 'ask'
   }
 
   return h.view(templates[req.path], {
-    title: 'Error de validacion',
-    error: 'Por favor co,mplete los campos requeridos'
-  }).code(400)
-  return Boom.badRequest('fallo la validacion', req.payload)
+    title: 'Error de validación',
+    error: 'Por favor complete los campos requeridos'
+  }).code(400).takeover()
 }
 
 module.exports = {
   createUser: createUser,
+  failValidation: failValidation,
   logout: logout,
-  validateUser: validateUser,
-  failValidation: failValidation
+  validateUser: validateUser
 }

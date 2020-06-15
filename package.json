@@ -1,5 +1,5 @@
 {
-  "name": "richy flow",
+  "name": "richy-flow",
   "version": "1.0.0",
   "description": "Un sitio como StackOverflow",
   "main": "index.js",
